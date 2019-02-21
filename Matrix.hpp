@@ -1,7 +1,8 @@
 #include <string>
+#include "Operator.hpp"
 
-#ifndef POO2_MATRIX_MATRIX_HPP
-#define POO2_MATRIX_MATRIX_HPP
+#ifndef MATRIX_HPP
+#define MATRIX_HPP
 
 class Matrix {
 private:
@@ -20,6 +21,7 @@ public:
     // Destructor
     virtual ~Matrix();
 
+    // change to << operator
     std::string toString() const;
 
     // Operations
@@ -43,4 +45,4 @@ private:
     Matrix* operation(Matrix& other, Operator op);
 };
 
-#endif //POO2_MATRIX_MATRIX_HPP
+#endif // MATRIX_HPP

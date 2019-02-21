@@ -7,7 +7,7 @@ int main(int argc, const char* argv[]) {
     if(argc != 6)
         throw runtime_error("You have to give 5 arguments to the program");
 
-    size_t modulo = (unsigned int) argv[5];
+    size_t modulo = (size_t) argv[5];
 
 
     cout << "The modulo is " << modulo << endl << endl;
