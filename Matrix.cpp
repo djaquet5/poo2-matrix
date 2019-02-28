@@ -50,3 +50,8 @@ size_t Matrix::at(size_t i, size_t j) const {
         throw std::runtime_error("Invalid index\n");
     }
 }
+
+// tmp, to run
+Matrix::~Matrix(){
+
+}
