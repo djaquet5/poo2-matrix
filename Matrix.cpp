@@ -12,7 +12,7 @@ Matrix::Matrix(size_t n, size_t m, size_t modulo) {
 
     for(size_t i = 0; i < n; ++i) {
         for(size_t j = 0; j < m; ++j) {
-            data[i][j] = rand() / (RAND_MAX) * (n - 1);
+            data[i][j] = rand() % modulo;
         }
     }
 
@@ -71,11 +71,10 @@ void Matrix::free() {
 std::ostream& operator<<(std::ostream& ostream, const Matrix& matrix) {
 
     for(size_t i = 0; i < matrix.n; ++i) {
-        ostream << '[';
-        for(size_t j = 0; j < matrix.m; ++j) {
-            ostream << matrix.data[i][j];
-        }
-        ostream << ']' << std::endl;
+        for(size_t j = 0; j < matrix.m; ++j)
+            ostream << matrix.data[i][j] << " ";
+
+        ostream << std::endl;
     }
 
     return ostream;
