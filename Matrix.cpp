@@ -68,7 +68,7 @@ void Matrix::free() {
     delete(data);
 }
 
-std::ostream& operator<<(std::ostream ostream, const Matrix& matrix) {
+std::ostream& operator<<(std::ostream& ostream, const Matrix& matrix) {
 
     for(size_t i = 0; i < matrix.n; ++i) {
         ostream << '[';
@@ -77,6 +77,8 @@ std::ostream& operator<<(std::ostream ostream, const Matrix& matrix) {
         }
         ostream << ']' << std::endl;
     }
+
+    return ostream;
 }
 
 size_t Matrix::at(size_t i, size_t j) const {

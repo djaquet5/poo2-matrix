@@ -16,11 +16,11 @@ int main(int argc, const char* argv[]) {
     Matrix one = Matrix((size_t) strtol(argv[1], &ptr, 10), (size_t) strtol(argv[2], &ptr, 10), modulo);
     Matrix two = Matrix((size_t) strtol(argv[3], &ptr, 10), (size_t) strtol(argv[4], &ptr, 10), modulo);
 
-//    cout << "one" << endl
-//         << one   << endl;
-//
-//    cout << "two" << endl
-//         << two   << endl;
+    cout << "one" << endl
+         << one   << endl;
+
+    cout << "two" << endl
+         << two   << endl;
 //
 //    cout << "----------------------------" << endl << endl;
 //

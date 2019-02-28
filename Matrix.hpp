@@ -43,7 +43,7 @@ public:
     }
 
     // << operator overload
-    friend std::ostream& operator<<(std::ostream, const Matrix& matrix);
+    friend std::ostream& operator<<(std::ostream& ostream, const Matrix& matrix);
 
     // Operations
     // Returns pointer on result Matrix
