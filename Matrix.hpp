@@ -11,14 +11,14 @@ private:
     size_t m;
     size_t modulo;
 
-    size_t** matrix;
+    size_t** data;
 
 public:
     // Constructor (random)
     Matrix(size_t n, size_t m, size_t modulo);
 
     // Constructor (from data)
-    Matrix(size_t n, size_t m, size_t modulo, size_t** matrix);
+    Matrix(size_t n, size_t m, size_t modulo, size_t** data);
 
     // copy
     Matrix(const Matrix& other);
@@ -38,10 +38,12 @@ public:
     // get elem
     size_t at(size_t i, size_t j) const;
     // Destructor
-    virtual ~Matrix();
+    virtual ~Matrix() {
+        free();
+    }
 
     // << operator overload
-    friend std::ostream& operator<<(std::ostream, Matrix& matrix);
+    friend std::ostream& operator<<(std::ostream, const Matrix& matrix);
 
     // Operations
     // Returns pointer on result Matrix
