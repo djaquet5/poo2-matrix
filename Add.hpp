@@ -6,6 +6,9 @@
 
 #include "Operator.hpp"
 
-class Add : Operator{
-
+class Add : public Operator{
+public:
+    size_t apply(size_t leftValue, size_t rightValue) const {
+        return leftValue + rightValue;
+    }
 };

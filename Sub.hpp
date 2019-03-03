@@ -6,6 +6,9 @@
 
 #include "Operator.hpp"
 
-class Sub : Operator {
-
+class Sub : public Operator {
+public:
+    size_t apply(size_t leftValue, size_t rightValue) {
+        return leftValue - rightValue;
+    }
 };

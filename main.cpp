@@ -21,11 +21,11 @@ int main(int argc, const char* argv[]) {
 
     cout << "two" << endl
          << two   << endl;
-//
-//    cout << "----------------------------" << endl << endl;
-//
-//    cout << "one + two"  << endl
-//         << one.add(two) << endl << endl;
+
+    cout << "----------------------------" << endl << endl;
+
+    cout << "one + two"  << endl
+         << one.add(two) << endl << endl;
 //
 //    Matrix three = one.addAndGetValue(two);
 //    cout << three << endl << endl;

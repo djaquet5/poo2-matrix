@@ -47,23 +47,23 @@ public:
 
     // Operations
     // Returns pointer on result Matrix
-    Matrix* add(const Matrix& other) const;
-    Matrix* sub(const Matrix& other) const;
-    Matrix* mult(const Matrix& other) const;
+    Matrix* add(const Matrix& other);
+    Matrix* sub(const Matrix& other);
+    Matrix* mult(const Matrix& other);
 
     // Returns new Matrix (by value)
     Matrix addAndGetValue(const Matrix& other) const;
     Matrix subAndGetValue(const Matrix& other) const;
     Matrix multAndGetValue(const Matrix& other) const;
 
-    // Modifies other Matrix
-    void addOn(Matrix& other);
-    void subOn(Matrix& other);
-    void multOn(Matrix& other);
+    // Modifies this Matrix
+    void addOnThis(Matrix& other);
+    void subOnThis(Matrix& other);
+    void multOnthis(Matrix& other);
 
 private:
-    // Matrix operation with Operator op
-    Matrix* operation(Matrix& other, Operator op);
+    // return modified target with operation op
+    size_t** operation(size_t** target, const Matrix& other, const Operator& op);
 
     // free
     void free();

@@ -8,5 +8,6 @@
 #include <cstdio>
 
 class Operator {
-    virtual size_t apply(size_t leftValue, size_t rightValue);
+public:
+    virtual size_t apply(size_t leftValue, size_t rightValue) const = 0;
 };
