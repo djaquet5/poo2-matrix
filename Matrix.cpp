@@ -3,61 +3,64 @@
 #include "Sub.hpp"
 #include "Mult.hpp"
 
-Matrix::Matrix(size_t n, size_t m, size_t modulo) {
-    if(modulo == 0 || n == 0 || m == 0) {
+Matrix::Matrix(size_t nbLines, size_t nbColumns, size_t modulo) {
+    if(modulo == 0 || nbLines == 0 || nbColumns == 0) {
         throw std::invalid_argument("Invalid parameters\n");
     }
 
-    auto data = new size_t*[n];
-    for(size_t i = 0; i < n; ++i) {
-        data[i] = new size_t[m];
+    size_t** data = new size_t*[nbLines];
+    for(size_t i = 0; i < nbLines; ++i) {
+        data[i] = new size_t[nbColumns];
     }
 
-    for(size_t i = 0; i < n; ++i) {
-        for(size_t j = 0; j < m; ++j) {
+    // TODO : check rand
+    for(size_t i = 0; i < nbLines; ++i) {
+        for(size_t j = 0; j < nbColumns; ++j) {
+//            data[i][j] = (size_t) (1 + rand() / (RAND_MAX + 1.) * (modulo - 1));
             data[i][j] = rand() % modulo;
         }
     }
 
-    this->n = n;
-    this->m = m;
+    this->nbLines = nbLines;
+    this->nbColumns = nbColumns;
     this->modulo = modulo;
     this->data = data;
 }
 
-Matrix::Matrix(size_t n, size_t m, size_t modulo, size_t** data) {
-    if(modulo == 0 || n == 0 || m == 0) {
+Matrix::Matrix(size_t nbLines, size_t nbColumns, size_t modulo, size_t** data) {
+    if(modulo == 0 || nbLines == 0 || nbColumns == 0) {
         throw std::invalid_argument("Invalid parameters\n");
     }
 
-    for(size_t i = 0; i < n; i++) {
-        for(size_t j = 0; j < m; j++) {
+    for(size_t i = 0; i < nbLines; i++) {
+        for(size_t j = 0; j < nbColumns; j++) {
             if(data[i][j] < 0 || data[i][j] >= modulo) {
                 throw std::invalid_argument("Invalid input table\n");
             }
         }
     }
 
-    this->n = n;
-    this->m = m;
+    this->nbLines = nbLines;
+    this->nbColumns = nbColumns;
     this->modulo = modulo;
     this->data = data;
 }
 
 Matrix::Matrix(const Matrix &other) {
-    auto dataCopy = new size_t*[other.n];
-    for(size_t i = 0; i < other.n; ++i) {
-        dataCopy[i] = new size_t[other.m];
+    size_t** dataCopy = new size_t*[other.nbLines];
+
+    for(size_t i = 0; i < other.nbLines; ++i) {
+        dataCopy[i] = new size_t[other.nbColumns];
     }
 
-    for(size_t i = 0; i < other.n; ++i) {
-        for(size_t j = 0; j < other.m; ++j) {
+    for(size_t i = 0; i < other.nbLines; ++i) {
+        for(size_t j = 0; j < other.nbColumns; ++j) {
             dataCopy[i][j] = other.data[i][j];
         }
     }
 
-    this->n = other.n;
-    this->m = other.m;
+    this->nbLines = other.nbLines;
+    this->nbColumns = other.nbColumns;
     this->modulo = other.modulo;
     this->data = dataCopy;
 
@@ -65,7 +68,7 @@ Matrix::Matrix(const Matrix &other) {
 
 size_t** Matrix::computeData(const Matrix &other, const Operator &op) const {
     if(modulo != other.modulo) {
-        throw std::invalid_argument("The modulo of the Matrices must be the same\n");
+        throw std::invalid_argument("The modulo of the Matrices must have the same modulo\n");
     }
 
     const Matrix* minN;
@@ -73,7 +76,7 @@ size_t** Matrix::computeData(const Matrix &other, const Operator &op) const {
     const Matrix* minM;
     const Matrix* maxM;
 
-    if(n <= other.n) {
+    if(nbLines <= other.nbLines) {
         minN = this;
         maxN = &other;
     } else {
@@ -81,7 +84,7 @@ size_t** Matrix::computeData(const Matrix &other, const Operator &op) const {
         maxN = this;
     }
 
-    if(m <= other.m) {
+    if(nbColumns <= other.nbColumns) {
         minM = this;
         maxM = &other;
     } else {
@@ -89,21 +92,21 @@ size_t** Matrix::computeData(const Matrix &other, const Operator &op) const {
         maxM = this;
     }
 
-    auto newData = new size_t*[maxN->n];
-    for(size_t i = 0; i < maxN->n; i++) {
-        newData[i] = new size_t[maxM->m];
+    size_t** newData = new size_t*[maxN->nbLines];
+    for(size_t i = 0; i < maxN->nbLines; i++) {
+        newData[i] = new size_t[maxM->nbColumns];
     }
 
-    for(size_t i = 0; i < maxN->n; i++) {
-        for(size_t j = 0; j < maxM->m; j++) {
-            if(i < minN->n) {
-                if(j < minM->m) {
+    for(size_t i = 0; i < maxN->nbLines; i++) {
+        for(size_t j = 0; j < maxM->nbColumns; j++) {
+            if(i < minN->nbLines) {
+                if(j < minM->nbColumns) {
                     newData[i][j] = op.apply(data[i][j], other.data[i][j], modulo);
                 } else {
                     newData[i][j] = maxM->data[i][j];
                 }
             } else {
-                if(j < minM->m) {
+                if(j < minM->nbColumns) {
                     newData[i][j] = maxN->data[i][j];
                 } else {
                     newData[i][j] = 0;
@@ -116,19 +119,22 @@ size_t** Matrix::computeData(const Matrix &other, const Operator &op) const {
 }
 
 void Matrix::onplaceOperation(const Matrix& other, const Operator& op) {
+    // Free the data to avoid memory leak
+    free();
+
     this->data = computeData(other, op);
-    this->n = std::max(n, other.n);
-    this->m = std::max(m, other.m);
+    this->nbLines = std::max(nbLines, other.nbLines);
+    this->nbColumns = std::max(nbColumns, other.nbColumns);
 }
 
 Matrix* Matrix::operation(const Matrix& other, const Operator& op) const {
     size_t** newData = computeData(other, op);
 
-    return new Matrix(std::max(n, other.n), std::max(m, other.m), modulo, newData);
+    return new Matrix(std::max(nbLines, other.nbLines), std::max(nbColumns, other.nbColumns), modulo, newData);
 }
 
 void Matrix::free() {
-    for(size_t i = 0; i < n; ++i) {
+    for(size_t i = 0; i < nbLines; ++i) {
         delete(data[i]);
     }
 
@@ -136,9 +142,8 @@ void Matrix::free() {
 }
 
 std::ostream& operator<<(std::ostream& ostream, const Matrix& matrix) {
-
-    for(size_t i = 0; i < matrix.n; ++i) {
-        for(size_t j = 0; j < matrix.m; ++j)
+    for(size_t i = 0; i < matrix.nbLines; ++i) {
+        for(size_t j = 0; j < matrix.nbColumns; ++j)
             ostream << matrix.data[i][j] << " ";
 
         ostream << std::endl;
@@ -150,18 +155,18 @@ std::ostream& operator<<(std::ostream& ostream, const Matrix& matrix) {
 // Operations
 // Returns pointer on result Matrix
 Matrix* Matrix::add(const Matrix& other) const {
-    Add op = Add();
-    return operation(other, op);
+//    Add op = Add();
+    return operation(other, Add());
 }
 
 Matrix* Matrix::sub(const Matrix& other) const {
-    Sub op = Sub();
-    return operation(other, op);
+//    Sub op = Sub();
+    return operation(other, Sub());
 }
 
 Matrix* Matrix::mult(const Matrix& other) const {
-    Mult op = Mult();
-    return operation(other, op);
+//    Mult op = Mult();
+    return operation(other, Mult());
 }
 
 // Returns new Matrix (by value)
@@ -179,16 +184,16 @@ Matrix Matrix::multAndGetValue(const Matrix& other) const {
 
 // Modifies this Matrix
 void Matrix::addOnThis(Matrix& other) {
-    Add op = Add();
-    onplaceOperation(other, op);
+//    Add op = Add();
+    onplaceOperation(other, Add());
 }
 
 void Matrix::subOnThis(Matrix& other) {
-    Sub op = Sub();
-    onplaceOperation(other, op);
+//    Sub op = Sub();
+    onplaceOperation(other, Sub());
 }
 
 void Matrix::multOnthis(Matrix& other) {
-    Mult op = Mult();
-    onplaceOperation(other, op);
+//    Mult op = Mult();
+    onplaceOperation(other, Mult());
 }

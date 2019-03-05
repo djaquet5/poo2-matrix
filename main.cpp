@@ -8,7 +8,7 @@ int main(int argc, const char* argv[]) {
         throw runtime_error("You have to give 5 arguments to the program");
 
     char *ptr;      // To get the string part of the arguments
-    auto modulo = (size_t) strtol(argv[5], &ptr, 10);
+    size_t modulo = (size_t) strtol(argv[5], &ptr, 10);
 
 
     cout << "The modulo is " << modulo << endl << endl;
@@ -64,11 +64,16 @@ int main(int argc, const char* argv[]) {
     cout << "----------------------------" << endl << endl;
 
     Matrix three = Matrix(one);
-    cout << "one" << endl
-         << one << endl;
-
     cout << "three (copy of one)" << endl
          << three << endl;
+
+    one.addOnThis(one);
+    cout << "one after one = one + one" << endl
+         << one << endl;
+
+    cout << "three (copy of one), to check if it has changed" << endl
+         << three << endl;
+
 
     cout << "----------------------------" << endl << endl;
 
@@ -108,6 +113,18 @@ int main(int argc, const char* argv[]) {
 //        cout << "Impossible de creer une matrice avec 0 colonne" << endl
 //             << "Test reussi" << endl;
 //    }
+//    cout << sizeof(size_t) << endl << sizeof(long long);
 
+    Matrix four = Matrix(3, 3, 10);
+
+    try{
+        one.addOnThis(four);
+        cout << one << endl
+             << "On peut faire une addition entre 2 matrices avec 2 modulos different" << endl
+             << "Test echoue" << endl;
+    } catch(invalid_argument e) {
+        cout << e.what()
+             << "Test reussi" << endl;
+    }
     return EXIT_SUCCESS;
 }

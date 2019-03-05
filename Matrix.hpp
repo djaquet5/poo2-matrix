@@ -7,18 +7,18 @@
 
 class Matrix {
 private:
-    size_t n;
-    size_t m;
+    size_t nbLines;
+    size_t nbColumns;
     size_t modulo;
 
     size_t** data;
 
 public:
     // Constructor (random)
-    Matrix(size_t n, size_t m, size_t modulo);
+    Matrix(size_t nbLines, size_t nbColumns, size_t modulo);
 
     // Constructor (from data)
-    Matrix(size_t n, size_t m, size_t modulo, size_t ** data);
+    Matrix(size_t nbLines, size_t nbColumns, size_t modulo, size_t** data);
 
     // copy
     Matrix(const Matrix& other);
@@ -29,7 +29,7 @@ public:
     }
 
     // << operator overload
-    friend std::ostream& operator<<(std::ostream& ostream, const Matrix& matrix);
+    friend std::ostream& operator << (std::ostream& ostream, const Matrix& matrix);
 
     // Operations
     // Returns pointer on result Matrix
@@ -55,7 +55,7 @@ private:
     Matrix* operation(const Matrix& other, const Operator& op) const;
 
     // Compute and return new data
-    size_t ** computeData(const Matrix& other, const Operator& op) const;
+    size_t** computeData(const Matrix& other, const Operator& op) const;
 
     // free
     void free();
