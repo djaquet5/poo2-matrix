@@ -25,43 +25,89 @@ int main(int argc, const char* argv[]) {
     cout << "----------------------------" << endl << endl;
 
     cout << "one + two (pointer)"  << endl
-         << *(one.add(two)) << endl << endl;
+         << *(one.add(two)) << endl;
 
     cout << "one - two (pointer)"  << endl
-         << *(one.sub(two)) << endl << endl;
+         << *(one.sub(two)) << endl;
 
-    cout << "tow - one (pointer)"  << endl
-         << *(two.sub(one)) << endl << endl;
+    cout << "two - one (pointer)"  << endl
+         << *(two.sub(one)) << endl;
 
     cout << "one * two (pointer)"  << endl
-         << *(one.mult(two)) << endl << endl;
+         << *(one.mult(two)) << endl;
 
     cout << "----------------------------" << endl << endl;
 
     cout << "one + two (value)"  << endl
-         << one.addAndGetValue(two) << endl << endl;
+         << one.addAndGetValue(two) << endl;
 
     cout << "one - two (value)"  << endl
-         << one.subAndGetValue(two) << endl << endl;
+         << one.subAndGetValue(two) << endl;
 
     cout << "one * two (value)"  << endl
-         << one.multAndGetValue(two) << endl << endl;
+         << one.multAndGetValue(two) << endl;
 
     cout << "----------------------------" << endl << endl;
 
     one.addOnThis(two);
     cout << "one + two (on one)"  << endl
-         << one << endl << endl;
+         << one << endl;
 
     one.subOnThis(two);
     cout << "one - two (on one)"  << endl
-         << one << endl << endl;
+         << one << endl;
 
     one.multOnthis(two);
     cout << "one * two (on one)"  << endl
-         << one << endl << endl;
+         << one << endl;
 
-    // TODO test copy, test invalid params, etc...
+    cout << "----------------------------" << endl << endl;
+
+    Matrix three = Matrix(one);
+    cout << "one" << endl
+         << one << endl;
+
+    cout << "three (copy of one)" << endl
+         << three << endl;
+
+    cout << "----------------------------" << endl << endl;
+
+    try{
+        Matrix matrix = Matrix(0, 3, modulo);
+        cout << "Matrice creee" << endl
+             << "Test echoue" << endl;
+    } catch (invalid_argument e) {
+        cout << "Impossible de creer une matrice avec 0 ligne" << endl
+             << "Test reussi" << endl;
+    }
+
+    // TODO: size_t -1 = 18446744073709551615, génère une erreur ?
+//    try{
+//        Matrix matrix = Matrix(-1, 3, modulo);
+//        cout << "Matrice creee" << endl
+//             << "Test echoue" << endl;
+//    } catch (invalid_argument e) {
+//        cout << "Impossible de creer une matrice avec -1 ligne" << endl
+//             << "Test reussi" << endl;
+//    }
+
+    try{
+        Matrix matrix = Matrix(3, 0, modulo);
+        cout << "Matrice creee" << endl
+             << "Test echoue" << endl;
+    } catch (invalid_argument e) {
+        cout << "Impossible de creer une matrice avec 0 colonne" << endl
+             << "Test reussi" << endl;
+    }
+
+//    try{
+//        Matrix matrix = Matrix(3, -1, modulo);
+//        cout << "Matrice creee" << endl
+//             << "Test echoue" << endl;
+//    } catch (invalid_argument e) {
+//        cout << "Impossible de creer une matrice avec 0 colonne" << endl
+//             << "Test reussi" << endl;
+//    }
 
     return EXIT_SUCCESS;
 }
