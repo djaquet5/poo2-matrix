@@ -8,7 +8,8 @@
 
 class Sub : public Operator {
 public:
-    size_t apply(size_t leftValue, size_t rightValue) {
-        return leftValue - rightValue;
+    size_t apply(size_t leftValue, size_t rightValue, size_t modulo) const {
+        long int res = leftValue - rightValue;
+        return (((res % (unsigned int) modulo) + modulo) % modulo);
     }
 };

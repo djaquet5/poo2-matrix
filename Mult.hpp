@@ -8,7 +8,7 @@
 
 class Mult : public Operator {
 public:
-    size_t apply(size_t leftValue, size_t rightValue) const {
-        return leftValue * rightValue;
+    size_t apply(size_t leftValue, size_t rightValue, size_t modulo) const {
+        return (leftValue * rightValue) % modulo;
     }
 };

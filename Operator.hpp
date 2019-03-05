@@ -9,5 +9,5 @@
 
 class Operator {
 public:
-    virtual size_t apply(size_t leftValue, size_t rightValue) const = 0;
+    virtual size_t apply(size_t leftValue, size_t rightValue, size_t modulo) const = 0;
 };

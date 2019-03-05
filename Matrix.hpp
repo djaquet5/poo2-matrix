@@ -18,25 +18,11 @@ public:
     Matrix(size_t n, size_t m, size_t modulo);
 
     // Constructor (from data)
-    Matrix(size_t n, size_t m, size_t modulo, size_t** data);
+    Matrix(size_t n, size_t m, size_t modulo, size_t ** data);
 
     // copy
     Matrix(const Matrix& other);
 
-    // Get n
-    size_t getN() const {
-        return n;
-    }
-    // Get m
-    size_t getM() const {
-        return m;
-    }
-    // Get modulo
-    size_t getModulo() const {
-        return modulo;
-    }
-    // get elem
-    size_t at(size_t i, size_t j) const;
     // Destructor
     virtual ~Matrix() {
         free();
@@ -47,9 +33,9 @@ public:
 
     // Operations
     // Returns pointer on result Matrix
-    Matrix* add(const Matrix& other);
-    Matrix* sub(const Matrix& other);
-    Matrix* mult(const Matrix& other);
+    Matrix* add(const Matrix& other) const;
+    Matrix* sub(const Matrix& other) const;
+    Matrix* mult(const Matrix& other) const;
 
     // Returns new Matrix (by value)
     Matrix addAndGetValue(const Matrix& other) const;
@@ -62,8 +48,14 @@ public:
     void multOnthis(Matrix& other);
 
 private:
-    // return modified target with operation op
-    size_t** operation(size_t** target, const Matrix& other, const Operator& op);
+    // Operation on this
+    void onplaceOperation(const Matrix& other, const Operator& op);
+
+    // Operation on new Matrix
+    Matrix* operation(const Matrix& other, const Operator& op) const;
+
+    // Compute and return new data
+    size_t ** computeData(const Matrix& other, const Operator& op) const;
 
     // free
     void free();

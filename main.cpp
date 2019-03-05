@@ -8,7 +8,7 @@ int main(int argc, const char* argv[]) {
         throw runtime_error("You have to give 5 arguments to the program");
 
     char *ptr;      // To get the string part of the arguments
-    size_t modulo = (size_t) strtol(argv[5], &ptr, 10);
+    auto modulo = (size_t) strtol(argv[5], &ptr, 10);
 
 
     cout << "The modulo is " << modulo << endl << endl;
@@ -24,33 +24,44 @@ int main(int argc, const char* argv[]) {
 
     cout << "----------------------------" << endl << endl;
 
-    cout << "one + two"  << endl
-         << one.add(two) << endl << endl;
-//
-//    Matrix three = one.addAndGetValue(two);
-//    cout << three << endl << endl;
-//
-//    Matrix twoCopy = Matrix(two);
-//    one.addOn(twoCopy);
-//    cout << twoCopy << endl << endl;
-//
-//    cout << "----------------------------" << endl << endl;
-//
-//    cout << "two + one (should be the same result than before)" << endl
-//         << two.add(one) << endl << endl;
-//
-//    three = two.addAndGetValue(one);
-//    cout << three << endl << endl;
-//
-//    // Here twoCopy is a copy of the matrix one
-//    twoCopy = Matrix(one);
-//    two.addOn(twoCopy);
-//
-//    cout << "----------------------------" << endl << endl;
-//
-//    cout << twoCopy << endl << endl;
-//    cout << "one - two" << endl;
-//
-//    cout << "one x two" << endl;
+    cout << "one + two (pointer)"  << endl
+         << *(one.add(two)) << endl << endl;
+
+    cout << "one - two (pointer)"  << endl
+         << *(one.sub(two)) << endl << endl;
+
+    cout << "tow - one (pointer)"  << endl
+         << *(two.sub(one)) << endl << endl;
+
+    cout << "one * two (pointer)"  << endl
+         << *(one.mult(two)) << endl << endl;
+
+    cout << "----------------------------" << endl << endl;
+
+    cout << "one + two (value)"  << endl
+         << one.addAndGetValue(two) << endl << endl;
+
+    cout << "one - two (value)"  << endl
+         << one.subAndGetValue(two) << endl << endl;
+
+    cout << "one * two (value)"  << endl
+         << one.multAndGetValue(two) << endl << endl;
+
+    cout << "----------------------------" << endl << endl;
+
+    one.addOnThis(two);
+    cout << "one + two (on one)"  << endl
+         << one << endl << endl;
+
+    one.subOnThis(two);
+    cout << "one - two (on one)"  << endl
+         << one << endl << endl;
+
+    one.multOnthis(two);
+    cout << "one * two (on one)"  << endl
+         << one << endl << endl;
+
+    // TODO test copy, test invalid params, etc...
+
     return EXIT_SUCCESS;
 }

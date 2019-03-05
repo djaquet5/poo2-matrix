@@ -1,5 +1,7 @@
 #include "Matrix.hpp"
 #include "Add.hpp"
+#include "Sub.hpp"
+#include "Mult.hpp"
 
 Matrix::Matrix(size_t n, size_t m, size_t modulo) {
     if(modulo == 0 || n == 0 || m == 0) {
@@ -23,8 +25,8 @@ Matrix::Matrix(size_t n, size_t m, size_t modulo) {
     this->data = data;
 }
 
-Matrix::Matrix(size_t n, size_t m, size_t modulo, size_t **data) {
-    if(modulo <= 0 || n == 0 || m == 0 || data == nullptr) {
+Matrix::Matrix(size_t n, size_t m, size_t modulo, size_t** data) {
+    if(modulo == 0 || n == 0 || m == 0) {
         throw std::invalid_argument("Invalid parameters\n");
     }
 
@@ -61,36 +63,68 @@ Matrix::Matrix(const Matrix &other) {
 
 }
 
-size_t** Matrix::operation(size_t** target, const Matrix& other, const Operator& op) {
+size_t** Matrix::computeData(const Matrix &other, const Operator &op) const {
     if(modulo != other.modulo) {
         throw std::invalid_argument("The modulo of the Matrices must be the same\n");
     }
 
-    size_t maxN = std::max(n, other.n);
-    size_t maxM = std::max(m, other.m);
-    size_t minN = std::min(n, other.n);
-    size_t minM = std::min(m, other.m);
+    const Matrix* minN;
+    const Matrix* maxN;
+    const Matrix* minM;
+    const Matrix* maxM;
 
-    if(target != nullptr) {
-        free();
+    if(n <= other.n) {
+        minN = this;
+        maxN = &other;
+    } else {
+        minN = &other;
+        maxN = this;
     }
 
-    target = new size_t*[maxN];
-    for(size_t i = 0; i < maxN; i++) {
-        target[i] = new size_t[maxM];
+    if(m <= other.m) {
+        minM = this;
+        maxM = &other;
+    } else {
+        minM = &other;
+        maxM = this;
     }
 
-    for(size_t i = 0; i < maxN; i++) {
-        for(size_t j = 0; j < maxM; j++) {
-            if(i < minN && j < minM) {
-                target[i][j] = op.apply(data[i][j], other.data[i][j]) % modulo;
+    auto newData = new size_t*[maxN->n];
+    for(size_t i = 0; i < maxN->n; i++) {
+        newData[i] = new size_t[maxM->m];
+    }
+
+    for(size_t i = 0; i < maxN->n; i++) {
+        for(size_t j = 0; j < maxM->m; j++) {
+            if(i < minN->n) {
+                if(j < minM->m) {
+                    newData[i][j] = op.apply(data[i][j], other.data[i][j], modulo);
+                } else {
+                    newData[i][j] = maxM->data[i][j];
+                }
             } else {
-                target[i][j] = 0;
+                if(j < minM->m) {
+                    newData[i][j] = maxN->data[i][j];
+                } else {
+                    newData[i][j] = 0;
+                }
             }
         }
     }
-    return target;
 
+    return newData;
+}
+
+void Matrix::onplaceOperation(const Matrix& other, const Operator& op) {
+    this->data = computeData(other, op);
+    this->n = std::max(n, other.n);
+    this->m = std::max(m, other.m);
+}
+
+Matrix* Matrix::operation(const Matrix& other, const Operator& op) const {
+    size_t** newData = computeData(other, op);
+
+    return new Matrix(std::max(n, other.n), std::max(m, other.m), modulo, newData);
 }
 
 void Matrix::free() {
@@ -113,58 +147,48 @@ std::ostream& operator<<(std::ostream& ostream, const Matrix& matrix) {
     return ostream;
 }
 
-size_t Matrix::at(size_t i, size_t j) const {
-    if(i >= n || j >= m) {
-        throw std::runtime_error("Invalid index\n");
-    }
-
-    return data[i][j];
-}
-
 // Operations
 // Returns pointer on result Matrix
-Matrix* Matrix::add(const Matrix& other) {
-    Matrix* result;
-    size_t** newData = nullptr;
+Matrix* Matrix::add(const Matrix& other) const {
     Add op = Add();
-
-    operation(newData, other, op);
-
-    result = new Matrix(std::max(this->n, other.n),std::max(this->m, other.m), modulo, newData);
-
-    return result;
+    return operation(other, op);
 }
 
-Matrix* Matrix::sub(const Matrix& other) {
-
+Matrix* Matrix::sub(const Matrix& other) const {
+    Sub op = Sub();
+    return operation(other, op);
 }
 
-Matrix* Matrix::mult(const Matrix& other) {
-
+Matrix* Matrix::mult(const Matrix& other) const {
+    Mult op = Mult();
+    return operation(other, op);
 }
 
 // Returns new Matrix (by value)
 Matrix Matrix::addAndGetValue(const Matrix& other) const {
-
+    return *add(other);
 }
 
 Matrix Matrix::subAndGetValue(const Matrix& other) const {
-
+    return *sub(other);
 }
 
 Matrix Matrix::multAndGetValue(const Matrix& other) const {
-
+    return *mult(other);
 }
 
 // Modifies this Matrix
 void Matrix::addOnThis(Matrix& other) {
-
+    Add op = Add();
+    onplaceOperation(other, op);
 }
 
 void Matrix::subOnThis(Matrix& other) {
-
+    Sub op = Sub();
+    onplaceOperation(other, op);
 }
 
 void Matrix::multOnthis(Matrix& other) {
-
+    Mult op = Mult();
+    onplaceOperation(other, op);
 }
