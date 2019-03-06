@@ -27,11 +27,7 @@ using namespace std;
 /**
  * Fonction de tests personnalisés
  */
-void test(){
-    size_t modulo = 5;
-
-    Matrix one = Matrix(3, 4, modulo);
-    Matrix two = Matrix(3, 5, modulo);
+void test(Matrix& one, Matrix& two, size_t modulo){
 
     cout << "/************************* Test function *************************/" << endl;
 
@@ -184,7 +180,7 @@ int main(int argc, const char* argv[]) {
     cout << "one * two"  << endl
          << one.multAndGetValue(two) << endl;
 
-    test();
+    test(one, two, modulo);
 
     return EXIT_SUCCESS;
 }
