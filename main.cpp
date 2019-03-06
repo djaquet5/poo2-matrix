@@ -180,6 +180,7 @@ int main(int argc, const char* argv[]) {
     cout << "one * two"  << endl
          << one.multAndGetValue(two) << endl;
 
+    // Here's our test
     test(one, two, modulo);
 
     return EXIT_SUCCESS;
