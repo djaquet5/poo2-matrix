@@ -1,8 +1,23 @@
+/*
+ -----------------------------------------------------------------------------------
+ Laboratoire : 01
+ Fichier     : Matrix.cpp
+ Auteur(s)   : David Jaquet & Christoph Rueff
+ Date        : 06.03.2019
+
+ But         : Implémentation de la classe Matrix
+
+ Remarque(s) :
+
+ -----------------------------------------------------------------------------------
+*/
+
 #include "Matrix.hpp"
 #include "Add.hpp"
 #include "Sub.hpp"
 #include "Mult.hpp"
 
+// Constructor without data
 Matrix::Matrix(size_t nbLines, size_t nbColumns, size_t modulo) {
     if(modulo == 0 || nbLines == 0 || nbColumns == 0) {
         throw std::invalid_argument("Invalid parameters\n");
@@ -27,11 +42,13 @@ Matrix::Matrix(size_t nbLines, size_t nbColumns, size_t modulo) {
     this->data = data;
 }
 
+// Constructor with data
 Matrix::Matrix(size_t nbLines, size_t nbColumns, size_t modulo, size_t** data) {
     if(modulo == 0 || nbLines == 0 || nbColumns == 0) {
         throw std::invalid_argument("Invalid parameters\n");
     }
 
+    // Check the data given
     for(size_t i = 0; i < nbLines; i++) {
         for(size_t j = 0; j < nbColumns; j++) {
             if(data[i][j] < 0 || data[i][j] >= modulo) {
@@ -46,6 +63,7 @@ Matrix::Matrix(size_t nbLines, size_t nbColumns, size_t modulo, size_t** data) {
     this->data = data;
 }
 
+// Copy constructor
 Matrix::Matrix(const Matrix &other) {
     size_t** dataCopy = new size_t*[other.nbLines];
 
@@ -66,6 +84,7 @@ Matrix::Matrix(const Matrix &other) {
 
 }
 
+// Compute a new matrix data depending on the operation given
 size_t** Matrix::computeData(const Matrix &other, const Operator &op) const {
     if(modulo != other.modulo) {
         throw std::invalid_argument("The modulo of the Matrices must have the same modulo\n");
@@ -118,6 +137,7 @@ size_t** Matrix::computeData(const Matrix &other, const Operator &op) const {
     return newData;
 }
 
+// Change the current matrix with the result of the operation
 void Matrix::onplaceOperation(const Matrix& other, const Operator& op) {
     // Free the data to avoid memory leak
     free();
@@ -127,12 +147,13 @@ void Matrix::onplaceOperation(const Matrix& other, const Operator& op) {
     this->nbColumns = std::max(nbColumns, other.nbColumns);
 }
 
+// Get the result of the operation
 Matrix* Matrix::operation(const Matrix& other, const Operator& op) const {
-    size_t** newData = computeData(other, op);
-
-    return new Matrix(std::max(nbLines, other.nbLines), std::max(nbColumns, other.nbColumns), modulo, newData);
+    return new Matrix(std::max(nbLines, other.nbLines), std::max(nbColumns, other.nbColumns),
+                      modulo, computeData(other, op));
 }
 
+// Free the data of the matrix
 void Matrix::free() {
     for(size_t i = 0; i < nbLines; ++i) {
         delete(data[i]);
@@ -141,7 +162,8 @@ void Matrix::free() {
     delete(data);
 }
 
-std::ostream& operator<<(std::ostream& ostream, const Matrix& matrix) {
+// Overload of the << operator
+std::ostream& operator << (std::ostream& ostream, const Matrix& matrix) {
     for(size_t i = 0; i < matrix.nbLines; ++i) {
         for(size_t j = 0; j < matrix.nbColumns; ++j)
             ostream << matrix.data[i][j] << " ";
@@ -152,24 +174,22 @@ std::ostream& operator<<(std::ostream& ostream, const Matrix& matrix) {
     return ostream;
 }
 
-// Operations
+/**************************** Operations ****************************/
+
 // Returns pointer on result Matrix
 Matrix* Matrix::add(const Matrix& other) const {
-//    Add op = Add();
     return operation(other, Add());
 }
 
 Matrix* Matrix::sub(const Matrix& other) const {
-//    Sub op = Sub();
     return operation(other, Sub());
 }
 
 Matrix* Matrix::mult(const Matrix& other) const {
-//    Mult op = Mult();
     return operation(other, Mult());
 }
 
-// Returns new Matrix (by value)
+// Returns new Matrix
 Matrix Matrix::addAndGetValue(const Matrix& other) const {
     return *add(other);
 }
@@ -184,16 +204,13 @@ Matrix Matrix::multAndGetValue(const Matrix& other) const {
 
 // Modifies this Matrix
 void Matrix::addOnThis(Matrix& other) {
-//    Add op = Add();
     onplaceOperation(other, Add());
 }
 
 void Matrix::subOnThis(Matrix& other) {
-//    Sub op = Sub();
     onplaceOperation(other, Sub());
 }
 
 void Matrix::multOnthis(Matrix& other) {
-//    Mult op = Mult();
     onplaceOperation(other, Mult());
 }

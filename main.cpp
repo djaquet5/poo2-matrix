@@ -1,3 +1,22 @@
+/*
+ -----------------------------------------------------------------------------------
+ Laboratoire : 01
+ Fichier     : main.cpp
+ Auteur(s)   : David Jaquet & Christoph Rueff
+ Date        : 06.03.2019
+
+ But         : Programme de tests pour des calculs de matrices
+
+ Remarque(s) : - Les matrices sont de tailles variables
+               - Les valeurs au sein de la matrices sont comprises entre
+                 0 et un modulo fourni
+               - Les tailles ainsi que le modulo sont fournis en paramètre
+               - Les opérations implémentées sont l'addition, la soustraction,
+                 et la multiplication.
+
+ -----------------------------------------------------------------------------------
+*/
+
 #include <iostream>
 #include "Matrix.hpp"
 
@@ -7,7 +26,9 @@ int main(int argc, const char* argv[]) {
     if(argc != 6)
         throw runtime_error("You have to give 5 arguments to the program");
 
-    char *ptr;      // To get the string part of the arguments
+    // To get the string part of the arguments
+    char *ptr;
+
     size_t modulo = (size_t) strtol(argv[5], &ptr, 10);
 
 
@@ -24,6 +45,7 @@ int main(int argc, const char* argv[]) {
 
     cout << "----------------------------" << endl << endl;
 
+    // Check the operators who give the pointer to a new matrix
     cout << "one + two (pointer)"  << endl
          << *(one.add(two)) << endl;
 
@@ -38,6 +60,7 @@ int main(int argc, const char* argv[]) {
 
     cout << "----------------------------" << endl << endl;
 
+    // Check the operators who give a new matrix
     cout << "one + two (value)"  << endl
          << one.addAndGetValue(two) << endl;
 
@@ -49,6 +72,7 @@ int main(int argc, const char* argv[]) {
 
     cout << "----------------------------" << endl << endl;
 
+    // Check the operators who change the value of the matrix
     one.addOnThis(two);
     cout << "one + two (on one)"  << endl
          << one << endl;
@@ -63,20 +87,23 @@ int main(int argc, const char* argv[]) {
 
     cout << "----------------------------" << endl << endl;
 
+    // Check the copy constructor
     Matrix three = Matrix(one);
     cout << "three (copy of one)" << endl
          << three << endl;
 
+    // Change the value of the copied matrix
     one.addOnThis(one);
     cout << "one after one = one + one" << endl
          << one << endl;
 
+    // Check if the matrix hasn't change
     cout << "three (copy of one), to check if it has changed" << endl
          << three << endl;
 
-
     cout << "----------------------------" << endl << endl;
 
+    // Check the constructor with invalid parameters
     try{
         Matrix matrix = Matrix(0, 3, modulo);
         cout << "Matrice creee" << endl
@@ -115,6 +142,7 @@ int main(int argc, const char* argv[]) {
 //    }
 //    cout << sizeof(size_t) << endl << sizeof(long long);
 
+    // Check an operation with matrix who has different modulos
     Matrix four = Matrix(3, 3, 10);
 
     try{
@@ -126,5 +154,6 @@ int main(int argc, const char* argv[]) {
         cout << e.what()
              << "Test reussi" << endl;
     }
+
     return EXIT_SUCCESS;
 }
