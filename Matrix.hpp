@@ -99,7 +99,7 @@ public:
      * Get a matrix who is the result of the addition between 2 matrices
      *
      * @param other     Other matrix to do the operation
-     * @return Pointer on the result matrix
+     * @return Result matrix
      */
     Matrix addAndGetValue(const Matrix& other) const;
 
@@ -107,7 +107,7 @@ public:
      * Get a matrix who is the result of the substraction between 2 matrices
      *
      * @param other     Other matrix to do the operation
-     * @return Pointer on the result matrix
+     * @return Result matrix
      */
     Matrix subAndGetValue(const Matrix& other) const;
 
@@ -115,7 +115,7 @@ public:
      * Get a matrix who is the result of the multiplication between 2 matrices
      *
      * @param other     Other matrix to do the operation
-     * @return Pointer on the result matrix
+     * @return Result matrix
      */
     Matrix multAndGetValue(const Matrix& other) const;
 
@@ -123,7 +123,7 @@ public:
      * Add the other matrix given to the current one
      *
      * @param other     Other matrix to do the operation
-     * @return Pointer on the result matrix
+     * @return Current matrix
      */
     Matrix addOnThis(Matrix& other);
 
@@ -131,7 +131,7 @@ public:
      * Substract the other matrix given to the current one
      *
      * @param other     Other matrix to do the operation
-     * @return Pointer on the result matrix
+     * @return Current matrix
      */
     Matrix subOnThis(Matrix& other);
 
@@ -139,7 +139,7 @@ public:
      * Multiply the other matrix given to the current one
      *
      * @param other     Other matrix to do the operation
-     * @return Pointer on the result matrix
+     * @return Current matrix
      */
     Matrix multOnthis(Matrix& other);
 
