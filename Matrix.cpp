@@ -153,10 +153,12 @@ size_t** Matrix::computeData(const Matrix &other, const Operator &op) const {
 
 // Change the current matrix with the result of the operation
 void Matrix::onplaceOperation(const Matrix& other, const Operator& op) {
-    // Free the data to avoid memory leak
-//    free();
+    size_t** newData = computeData(other, op);
 
-    this->data = computeData(other, op);
+    // Free the data to avoid memory leak
+    free();
+
+    this->data = newData;
     this->nbLines = std::max(nbLines, other.nbLines);
     this->nbColumns = std::max(nbColumns, other.nbColumns);
 }
