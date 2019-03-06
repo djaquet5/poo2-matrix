@@ -40,7 +40,7 @@ Matrix::Matrix(size_t nbLines, size_t nbColumns, size_t modulo) {
 
     // Initialize random seed only once
     if(!isRandOn){
-        srand(time(NULL));
+        srand((unsigned int) time(nullptr));
         isRandOn = true;
     }
 
@@ -172,10 +172,10 @@ Matrix* Matrix::operation(const Matrix& other, const Operator& op) const {
 // Free the data of the matrix
 void Matrix::free() {
     for(size_t i = 0; i < nbLines; ++i) {
-        delete(data[i]);
+        delete[] data[i];
     }
 
-    delete(data);
+    delete[] data;
 }
 
 // Overload of the << operator

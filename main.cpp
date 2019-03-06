@@ -92,7 +92,7 @@ void test(){
         Matrix matrix = Matrix(0, 3, modulo);
         cout << "Matrice creee" << endl
              << "Test echoue" << endl;
-    } catch (invalid_argument e) {
+    } catch (invalid_argument& e) {
         cout << "Impossible de creer une matrice avec 0 ligne" << endl
              << "Test reussi" << endl;
     }
@@ -101,7 +101,7 @@ void test(){
         Matrix matrix = Matrix(-1, 3, modulo);
         cout << "Matrice creee" << endl
              << "Test echoue" << endl;
-    } catch (invalid_argument e) {
+    } catch (invalid_argument& e) {
         cout << "Impossible de creer une matrice avec trop de lignes" << endl
              << "Test reussi" << endl;
     }
@@ -110,7 +110,7 @@ void test(){
         Matrix matrix = Matrix(3, 0, modulo);
         cout << "Matrice creee" << endl
              << "Test echoue" << endl;
-    } catch (invalid_argument e) {
+    } catch (invalid_argument& e) {
         cout << "Impossible de creer une matrice avec 0 colonne" << endl
              << "Test reussi" << endl;
     }
@@ -119,7 +119,7 @@ void test(){
         Matrix matrix = Matrix(3, -1, modulo);
         cout << "Matrice creee" << endl
              << "Test echoue" << endl;
-    } catch (invalid_argument e) {
+    } catch (invalid_argument& e) {
         cout << "Impossible de creer une matrice avec trop de colonnes" << endl
              << "Test reussi" << endl;
     }
@@ -132,7 +132,7 @@ void test(){
         cout << one << endl
              << "On peut faire une addition entre 2 matrices avec 2 modulos different" << endl
              << "Test echoue" << endl;
-    } catch(invalid_argument e) {
+    } catch(invalid_argument& e) {
         cout << e.what()
              << "Test reussi" << endl;
     }
@@ -140,7 +140,7 @@ void test(){
     // Check constructor with a null pointer instead of datas
     try{
         Matrix five = Matrix(3, 3, 5, nullptr);
-    } catch(invalid_argument e) {
+    } catch(invalid_argument& e) {
         cout << e.what()
              << "Test reussi" << endl;
     }
