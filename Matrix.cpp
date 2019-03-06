@@ -12,6 +12,7 @@
  -----------------------------------------------------------------------------------
 */
 
+#include <ctime>
 #include "Matrix.hpp"
 #include "Add.hpp"
 #include "Sub.hpp"
@@ -19,20 +20,33 @@
 
 // Constructor without data
 Matrix::Matrix(size_t nbLines, size_t nbColumns, size_t modulo) {
+    static bool isRandOn = false;
+
     if(modulo == 0 || nbLines == 0 || nbColumns == 0) {
         throw std::invalid_argument("Invalid parameters\n");
     }
 
-    size_t** data = new size_t*[nbLines];
-    for(size_t i = 0; i < nbLines; ++i) {
-        data[i] = new size_t[nbColumns];
+    size_t** data;
+
+    try {
+        data = new size_t*[nbLines];
+
+        for(size_t i = 0; i < nbLines; ++i) {
+            data[i] = new size_t[nbColumns];
+        }
+    } catch (std::bad_array_new_length& e) {
+        throw std::invalid_argument("Invalid parameters, matrix is to big");
     }
 
-    // TODO : check rand
+    // Initialize random seed only once
+    if(!isRandOn){
+        srand(time(NULL));
+        isRandOn = true;
+    }
+
     for(size_t i = 0; i < nbLines; ++i) {
         for(size_t j = 0; j < nbColumns; ++j) {
-//            data[i][j] = (size_t) (1 + rand() / (RAND_MAX + 1.) * (modulo - 1));
-            data[i][j] = rand() % modulo;
+            data[i][j] = (size_t) (1 + rand() / (RAND_MAX + 1.) * (modulo - 1));
         }
     }
 
@@ -44,7 +58,7 @@ Matrix::Matrix(size_t nbLines, size_t nbColumns, size_t modulo) {
 
 // Constructor with data
 Matrix::Matrix(size_t nbLines, size_t nbColumns, size_t modulo, size_t** data) {
-    if(modulo == 0 || nbLines == 0 || nbColumns == 0) {
+    if(modulo <= 0 || nbLines <= 0 || nbColumns <= 0 || data == nullptr) {
         throw std::invalid_argument("Invalid parameters\n");
     }
 
@@ -140,7 +154,7 @@ size_t** Matrix::computeData(const Matrix &other, const Operator &op) const {
 // Change the current matrix with the result of the operation
 void Matrix::onplaceOperation(const Matrix& other, const Operator& op) {
     // Free the data to avoid memory leak
-    free();
+//    free();
 
     this->data = computeData(other, op);
     this->nbLines = std::max(nbLines, other.nbLines);
@@ -203,14 +217,20 @@ Matrix Matrix::multAndGetValue(const Matrix& other) const {
 }
 
 // Modifies this Matrix
-void Matrix::addOnThis(Matrix& other) {
+Matrix Matrix::addOnThis(Matrix& other) {
     onplaceOperation(other, Add());
+
+    return *this;
 }
 
-void Matrix::subOnThis(Matrix& other) {
+Matrix Matrix::subOnThis(Matrix& other) {
     onplaceOperation(other, Sub());
+
+    return *this;
 }
 
-void Matrix::multOnthis(Matrix& other) {
+Matrix Matrix::multOnthis(Matrix& other) {
     onplaceOperation(other, Mult());
+
+    return *this;
 }

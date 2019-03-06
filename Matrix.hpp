@@ -125,7 +125,7 @@ public:
      * @param other     Other matrix to do the operation
      * @return Pointer on the result matrix
      */
-    void addOnThis(Matrix& other);
+    Matrix addOnThis(Matrix& other);
 
     /**
      * Substract the other matrix given to the current one
@@ -133,7 +133,7 @@ public:
      * @param other     Other matrix to do the operation
      * @return Pointer on the result matrix
      */
-    void subOnThis(Matrix& other);
+    Matrix subOnThis(Matrix& other);
 
     /**
      * Multiply the other matrix given to the current one
@@ -141,7 +141,7 @@ public:
      * @param other     Other matrix to do the operation
      * @return Pointer on the result matrix
      */
-    void multOnthis(Matrix& other);
+    Matrix multOnthis(Matrix& other);
 
 private:
 
